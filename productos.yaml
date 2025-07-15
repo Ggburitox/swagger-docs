@@ -3,11 +3,15 @@ info:
   title: API de Productos
   version: 1.0.0
   description: Documentación de la API para gestión de productos
+servers:
+  - url: https://tu-api-productos.execute-api.us-east-1.amazonaws.com/prod
 
 paths:
   /producto/crear:
     post:
       summary: Crear un producto
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -21,20 +25,22 @@ paths:
   /producto/buscar:
     post:
       summary: Buscar un producto
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - tenant_id
+                - producto_id
               properties:
                 tenant_id:
                   type: string
                 producto_id:
                   type: string
-              required:
-                - tenant_id
-                - producto_id
       responses:
         '200':
           description: Detalle del producto
@@ -42,20 +48,22 @@ paths:
   /producto/eliminar:
     delete:
       summary: Eliminar un producto
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - tenant_id
+                - producto_id
               properties:
                 tenant_id:
                   type: string
                 producto_id:
                   type: string
-              required:
-                - tenant_id
-                - producto_id
       responses:
         '200':
           description: Producto eliminado exitosamente
@@ -63,6 +71,8 @@ paths:
   /producto/listar:
     post:
       summary: Listar productos con paginación
+      security:
+        - bearerAuth: []
       requestBody:
         required: false
         content:
@@ -81,12 +91,17 @@ paths:
   /producto/modificar:
     put:
       summary: Modificar un producto
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - tenant_id
+                - producto_id
               properties:
                 tenant_id:
                   type: string
@@ -96,17 +111,24 @@ paths:
                   type: string
                 precio:
                   type: number
-              required:
-                - tenant_id
-                - producto_id
       responses:
         '200':
           description: Producto modificado exitosamente
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: UUID
   schemas:
     ProductoEntrada:
       type: object
+      required:
+        - tenant_id
+        - producto_id
+        - nombre
+        - precio
       properties:
         tenant_id:
           type: string
@@ -116,8 +138,3 @@ components:
           type: string
         precio:
           type: number
-      required:
-        - tenant_id
-        - producto_id
-        - nombre
-        - precio
