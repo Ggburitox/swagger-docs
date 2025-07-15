@@ -1,11 +1,9 @@
-openapi: 3.0.3
+openapi: 3.0.0
 info:
-  title: API de Productos para Petshops
+  title: API de Productos
   version: 1.0.0
-  description: Documentación de los endpoints de productos (crear, buscar, eliminar,
-    listar, modificar) para tiendas PETSHOP
-servers:
-- url: https://wx2zn3sf03.execute-api.us-east-1.amazonaws.com/prod
+  description: Documentación de la API para gestión de productos
+
 paths:
   /producto/crear:
     post:
@@ -15,41 +13,11 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-              - tenant_id
-              - producto_id
-              - nombre
-              - precio
-              - stock
-              properties:
-                tenant_id:
-                  type: string
-                  example: PETSHOP1
-                producto_id:
-                  type: string
-                  example: CRK123
-                nombre:
-                  type: string
-                  example: Croquetas Premium para Perro
-                descripcion:
-                  type: string
-                  example: Alimento seco para razas medianas, 10kg.
-                precio:
-                  type: number
-                  example: 89.99
-                stock:
-                  type: integer
-                  example: 25
+              $ref: '#/components/schemas/ProductoEntrada'
       responses:
         '200':
-          description: Producto creado correctamente
-        '400':
-          description: Faltan campos requeridos
-        '403':
-          description: Token inválido o expirado
-        '500':
-          description: Error interno
+          description: Producto creado exitosamente
+
   /producto/buscar:
     post:
       summary: Buscar un producto
@@ -59,29 +27,20 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-              - tenant_id
-              - producto_id
               properties:
                 tenant_id:
                   type: string
-                  example: PETSHOP1
                 producto_id:
                   type: string
-                  example: CRK123
+              required:
+                - tenant_id
+                - producto_id
       responses:
         '200':
-          description: Producto encontrado
-        '400':
-          description: Faltan campos requeridos
-        '403':
-          description: Token inválido o expirado
-        '404':
-          description: Producto no encontrado
-        '500':
-          description: Error interno
+          description: Detalle del producto
+
   /producto/eliminar:
-    post:
+    delete:
       summary: Eliminar un producto
       requestBody:
         required: true
@@ -89,54 +48,38 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-              - tenant_id
-              - producto_id
               properties:
                 tenant_id:
                   type: string
-                  example: PETSHOP1
                 producto_id:
                   type: string
-                  example: CRK123
+              required:
+                - tenant_id
+                - producto_id
       responses:
         '200':
-          description: Producto eliminado correctamente
-        '400':
-          description: Campos faltantes
-        '403':
-          description: Token inválido o expirado
-        '500':
-          description: Error interno
+          description: Producto eliminado exitosamente
+
   /producto/listar:
     post:
       summary: Listar productos con paginación
       requestBody:
-        required: true
+        required: false
         content:
           application/json:
             schema:
               type: object
-              required:
-              - tenant_id
               properties:
                 tenant_id:
                   type: string
-                  example: PETSHOP1
                 startKey:
                   type: string
-                  example: P123
       responses:
         '200':
           description: Lista de productos
-        '400':
-          description: Faltan campos requeridos
-        '403':
-          description: Token inválido o expirado
-        '500':
-          description: Error interno
+
   /producto/modificar:
-    post:
+    put:
       summary: Modificar un producto
       requestBody:
         required: true
@@ -144,65 +87,25 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-              - tenant_id
-              - producto_id
               properties:
                 tenant_id:
                   type: string
-                  example: PETSHOP1
                 producto_id:
                   type: string
-                  example: CRK123
                 nombre:
                   type: string
-                  example: Croquetas Premium para Perro
                 precio:
                   type: number
-                  example: 89.99
+              required:
+                - tenant_id
+                - producto_id
       responses:
         '200':
-          description: Producto modificado correctamente
-        '400':
-          description: Faltan campos requeridos o inválidos
-        '403':
-          description: Token inválido o expirado
-        '500':
-          description: Error interno
-  /producto/{producto_id}:
-    delete:
-      summary: Eliminar un producto
-      parameters:
-      - name: producto_id
-        in: path
-        required: true
-        schema:
-          type: string
-        description: ID del producto a eliminar
-      responses:
-        '200':
-          description: Producto eliminado correctamente
-    put:
-      summary: Modificar un producto
-      parameters:
-      - name: producto_id
-        in: path
-        required: true
-        schema:
-          type: string
-        description: ID del producto a modificar
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Producto'
-      responses:
-        '200':
-          description: Producto modificado correctamente
+          description: Producto modificado exitosamente
+
 components:
   schemas:
-    Producto:
+    ProductoEntrada:
       type: object
       properties:
         tenant_id:
@@ -211,9 +114,10 @@ components:
           type: string
         nombre:
           type: string
-        descripcion:
-          type: string
         precio:
           type: number
-        stock:
-          type: integer
+      required:
+        - tenant_id
+        - producto_id
+        - nombre
+        - precio
