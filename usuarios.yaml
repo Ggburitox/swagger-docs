@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: API de Usuarios
+  description: Registro y login de usuarios por tenant
+  version: 1.0.0
+servers:
+- url: https://j66zrkuzv1.execute-api.us-east-1.amazonaws.com/prod
+paths:
+  /usuario/registro:
+    post:
+      summary: Registrar un nuevo usuario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/usuario_registro_body"
+        required: true
+      responses:
+        "201":
+          description: Usuario registrado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_201"
+        "400":
+          description: Faltan campos requeridos
+        "409":
+          description: El usuario ya existe en esta tienda
+        "500":
+          description: Error interno
+  /usuario/login:
+    post:
+      summary: Iniciar sesión de usuario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/usuario_login_body"
+        required: true
+      responses:
+        "200":
+          description: Inicio de sesión exitoso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200"
+        "400":
+          description: "Email, contraseña y tenant_id son requeridos"
+        "403":
+          description: Usuario no existe o credenciales incorrectas
+        "500":
+          description: Error interno en el servidor
+components:
+  schemas:
+    usuario_registro_body:
+      required:
+      - apellidos
+      - direccion
+      - email
+      - nombre
+      - password
+      - tenant_id
+      type: object
+      properties:
+        email:
+          type: string
+          example: ejemplo@email.com
+        password:
+          type: string
+          example: secreta123
+        nombre:
+          type: string
+          example: Juan
+        apellidos:
+          type: string
+          example: Pérez Gómez
+        direccion:
+          type: string
+          example: Calle Falsa 123
+        tenant_id:
+          type: string
+          example: PLAZA_VEA
+    inline_response_201:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Usuario registrado correctamente
+    usuario_login_body:
+      required:
+      - email
+      - password
+      - tenant_id
+      type: object
+      properties:
+        email:
+          type: string
+          example: ejemplo@email.com
+        password:
+          type: string
+          example: secreta123
+        tenant_id:
+          type: string
+          example: PLAZA_VEA
+    inline_response_200:
+      type: object
+      properties:
+        token:
+          type: string
+          example: 4a1b2c3d-5678-90ef-1234-56789abcdef0
