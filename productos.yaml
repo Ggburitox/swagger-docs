@@ -5,13 +5,13 @@ info:
   description: Documentación de la API para gestión de productos
 servers:
   - url: https://tu-api-productos.execute-api.us-east-1.amazonaws.com/prod
+security:
+  - bearerAuth: []  # ✅ Aplica el auth globalmente
 
 paths:
   /producto/crear:
     post:
       summary: Crear un producto
-      security:
-        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -25,8 +25,6 @@ paths:
   /producto/buscar:
     post:
       summary: Buscar un producto
-      security:
-        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -48,8 +46,6 @@ paths:
   /producto/eliminar:
     delete:
       summary: Eliminar un producto
-      security:
-        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -71,8 +67,6 @@ paths:
   /producto/listar:
     post:
       summary: Listar productos con paginación
-      security:
-        - bearerAuth: []
       requestBody:
         required: false
         content:
@@ -91,8 +85,6 @@ paths:
   /producto/modificar:
     put:
       summary: Modificar un producto
-      security:
-        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -121,6 +113,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: UUID
+
   schemas:
     ProductoEntrada:
       type: object
